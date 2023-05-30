@@ -27,36 +27,85 @@ void insertNode(int value, struct ListNode *prev) {
     }
 }
 
-struct ListNode *mergeKLists(struct ListNode **lists, int listsSize) {
-    if ((lists[0] != NULL) && (listsSize != 0)) {
-        struct ListNode *output = lists[0];
-        struct ListNode *head = lists[0];
-        lists[0] = lists[0]->next;
-        struct ListNode *tmp = lists[0];
-        int i = 1;
-        while ((i < listsSize) && (tmp->val > lists[i]->val)) {
-            lists[i - 1] = lists[i];
-            lists[i] = tmp;
-            i++;
+void merge(struct ListNode **lists, struct ListNode **left, struct ListNode **right, int leftSize, int rightSize) {
+    int lIndex = 0, rIndex = 0, index = 0;
+    while ((lIndex < leftSize) && (rIndex < rightSize)) {
+        if ((left[lIndex] == NULL) || ((right[rIndex] != NULL) && (left[lIndex]->val <= right[rIndex]->val))) {
+            lists[index] = left[lIndex];
+            lIndex++;
         }
-        while (lists[0] != NULL) {
-            output->next = lists[0]; //如果lists[0]存在，就將它接到output的下一位，並把output指向新的node
-            output = output->next;
-            if (lists[0]->next != NULL) { //把lists[0]指向它的下一項
-                lists[0] = lists[0]->next;
+        else {
+            lists[index] = right[rIndex];
+            rIndex++;
+        }
+        index++;
+    }
+    while (lIndex < leftSize) {
+        lists[index] = left[lIndex];
+        lIndex++;
+        index++;
+    }
+    while (rIndex < rightSize) {
+        lists[index] = right[lIndex];
+        rIndex++;
+        index++;
+    }
+}
+
+void mergeSort(struct ListNode **lists, int size) {
+    if (size <= 1) {
+        return;
+    }
+    int mid = size / 2;
+    struct ListNode **left = (struct ListNode **)calloc(mid, sizeof(struct ListNode *));
+    struct ListNode **right = (struct ListNode **)calloc((size - mid), sizeof(struct ListNode *));
+    for (size_t i = 0; i < mid; i++) {
+        left[i] = lists[i];
+    }
+    for (size_t i = 0; i < (size - mid); i++) {
+        right[i] = lists[i];
+    }
+
+    mergeSort(left, mid);
+    mergeSort(right, (size - mid));
+    merge(lists, left, right, mid, size - mid);
+}
+
+struct ListNode *mergeKLists(struct ListNode **lists, int listsSize) {
+    mergeSort(lists, listsSize);
+    if (listsSize != 0) {
+        struct ListNode *output = calloc(1, sizeof(struct ListNode));
+        struct ListNode *head = output;
+        struct ListNode *current = NULL;
+        while (listsSize > 0) { //每個while迴圈會讓list多加一項
+            current = lists[0];
+            for (size_t i = 1; i < listsSize; i++) { //檢查新的lists[0]是否為最小的一項，如果不是就將它往後移到正確位置
+                if (((current == NULL) || (lists[i] == NULL)) || (current->val > lists[i]->val)) {
+                    lists[i - 1] = lists[i];
+                    lists[i] = current;
+                }
+                else {
+                    break;
+                }
+            }
+            if (current != NULL) {
+                if (lists[0] != NULL) {
+                    output->next = lists[0]; //如果lists[0]存在，就將它接到output的下一位，並把output指向新的node
+                    output = output->next;
+                    if (lists[0]->next != NULL) { //把lists[0]指向它的下一項
+                        lists[0] = lists[0]->next;
+                    }
+                    else {
+                        lists[0] = NULL;
+                    }
+                }
             }
             else {
-                lists[0] = NULL;
+                listsSize--;
             }
-            tmp = lists[0]; //檢查新的lists[0]是否為最小的一項，如果不是就將它往後移到正確位置
-            int i = 1;
-            while ((i < listsSize) && ((tmp == NULL) || (tmp->val > lists[i]->val))) {
-                lists[i - 1] = lists[i];
-                lists[i] = tmp;
-                i++;
-            }
+            current = lists[0];
         }
-        return head;
+        return head->next;
     }
     else {
         return NULL;
