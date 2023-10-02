@@ -46,7 +46,7 @@ void merge(struct ListNode **lists, struct ListNode **left, struct ListNode **ri
         index++;
     }
     while (rIndex < rightSize) {
-        lists[index] = right[lIndex];
+        lists[index] = right[rIndex];
         rIndex++;
         index++;
     }
@@ -62,10 +62,9 @@ void mergeSort(struct ListNode **lists, int size) {
     for (size_t i = 0; i < mid; i++) {
         left[i] = lists[i];
     }
-    for (size_t i = 0; i < (size - mid); i++) {
-        right[i] = lists[i];
+    for (size_t i = mid; i < size; i++) {
+        right[i - mid] = lists[i];
     }
-
     mergeSort(left, mid);
     mergeSort(right, (size - mid));
     merge(lists, left, right, mid, size - mid);
