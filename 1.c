@@ -54,6 +54,7 @@ void mergeSort(int left, int right, int *arr, int *index) {
 }
 
 int *twoSum(int *nums, int numsSize, int target, int *returnSize) {
+    returnSize[0] = 2;
     int *index = (int *)malloc(sizeof(int) * numsSize);
     int *output = (int *)malloc(sizeof(int) * 2);
     for (int i = 0; i < numsSize; i++) {
@@ -62,9 +63,6 @@ int *twoSum(int *nums, int numsSize, int target, int *returnSize) {
     mergeSort(0, numsSize - 1, nums, index);
     int right = numsSize - 1;
     int left = 0;
-    while (nums[right] > target) {
-        right--;
-    }
     while (right > left) {
         if (nums[right] + nums[left] == target) {
             output[0] = index[left];
