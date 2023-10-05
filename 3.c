@@ -6,7 +6,7 @@
 int lengthOfLongestSubstring(char *s) {
     int temp = 0, max = 0;
     int letters[128] = {0};
-    for (int i; s[i]; i++) {
+    for (int i = 0; s[i] != '\n'; i++) {
         if ((letters[s[i]] != 0) && (letters[s[i]] > temp)) {
             temp = letters[s[i]];
         }
