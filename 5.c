@@ -11,7 +11,7 @@ int checkPalindrome(int i, int j, bool **dp, char *s) {
         dp[i][j] = 1;
         return (i - j);
     }
-    else if ((dp[i - 1][j + 1] == 1) && (s[i] == s[j])) {
+    else if ((i > 0) && (j < i - 1) && (dp[i - 1][j + 1] == 1) && (s[i] == s[j])) {
         dp[i][j] = 1;
         return (i - j);
     }
@@ -25,7 +25,7 @@ char *longestPalindrome(char *s) {
     int start = 0;
     int max = 0;
     int pLen = 0;
-    bool **dp = (bool **)malloc(len * sizeof(bool *));
+    bool **dp = (bool **)calloc(len, sizeof(bool *));
     for (int i = 0; i < len; i++) {
         dp[i] = (bool *)calloc(i + 1, sizeof(bool));
         for (int j = 0; j < i + 1; j++) {
@@ -40,7 +40,7 @@ char *longestPalindrome(char *s) {
         free(dp[i]);
     }
     free(dp);
-    char *output = (char *)malloc((max + 1) * sizeof(char));
+    char *output = (char *)calloc((max + 1), sizeof(char));
     strncpy(output, &s[start], max);
     output[max] = '\0';
     return output;

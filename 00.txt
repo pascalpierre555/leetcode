@@ -1,1 +1,3 @@
-abcdba
+aaaaa
+abcba
+acdcffcdca
