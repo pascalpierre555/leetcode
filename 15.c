@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void *merge(int *nums, int l, int r, int m) {
-    int *tmp1 = (int *)malloc((m - l + 1) * sizeof(int));
-    int *tmp2 = (int *)malloc((r - m) * sizeof(int));
+void merge(int* nums, int l, int r, int m) {
+    int* tmp1 = (int*)malloc((m - l + 1) * sizeof(int));
+    int* tmp2 = (int*)malloc((r - m) * sizeof(int));
     for (int i = l; i <= m; i++) {
         tmp1[i - l] = nums[i];
     }
@@ -33,7 +33,7 @@ void *merge(int *nums, int l, int r, int m) {
     free(tmp2);
 }
 
-void mergeSort(int *nums, int l, int r) {
+void mergeSort(int* nums, int l, int r) {
     if (l < r) {
         int m = (l + r) / 2;
         mergeSort(nums, l, m);
@@ -42,37 +42,87 @@ void mergeSort(int *nums, int l, int r) {
     }
 }
 
-int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes) {
-    int **mergeSort(nums, 0, numsSize);
+int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
+    int** output = (int**)malloc(sizeof(int*));
+    mergeSort(nums, 0, numsSize - 1);
+    int size = 0;
     int pos = 0, neg = numsSize - 1;
     int i1, i2;
+    int k1 = 123456, k2 = 123456, k3 = 123456;
     for (int i = 0; i < numsSize; i++) { //找到正與負從哪開始
         if (nums[i] >= 0) {
             neg = i - 1;
             break;
         }
     }
-    for (int i = neg; i < numsSize; i++) {
+    for (int i = neg + 1; i < numsSize; i++) {
         if (nums[i] > 0) {
             pos = i;
             break;
         }
     }
-    if ()
-        for (int i = 1; i < numsSize - 1; i++) {
-            if (i <= neg) {
-                i1 = i - 1;
+    for (int i = 1; i < numsSize - 1; i++) {
+        if ((nums[i] == k2) && (i != 1)) {
+            continue;
+        }
+        k1 = 123456;
+        k2 = nums[i];
+        k3 = 123456;
+        if (nums[i] == 0) {
+            i1 = i - 1;
+            i2 = i + 1;
+        }
+        else if (nums[i] > 0) {
+            i1 = neg;
+            i2 = i + 1;
+        }
+        else {
+            i1 = i - 1;
+            i2 = pos;
+        }
+        while ((i1 >= 0) && (i2 < numsSize)) {
+            if ((nums[i1] == k1) || (nums[i1] + nums[i] + nums[i2] > 0)) {
+                i1--;
+            }
+            else if ((nums[i2] == k2) || (nums[i1] + nums[i] + nums[i2] < 0)) {
+                i2++;
+            }
+            else {
+                size++;
+                output = (int**)realloc(output, size * sizeof(int*));
+                output[size - 1] = (int*)malloc(3 * sizeof(int));
+                output[size - 1][0] = nums[i1];
+                output[size - 1][1] = nums[i];
+                output[size - 1][2] = nums[i2];
+                k1 = nums[i1];
+                k2 = nums[i2];
+                i1--;
+                i2++;
             }
         }
+    }
+    returnSize = (int*)malloc(sizeof(int));
+    *returnSize = size;
+    returnColumnSizes = (int**)malloc(size * sizeof(int*));
+    for (int i = 0; i < size; i++) {
+        returnColumnSizes[i] = (int*)malloc(sizeof(int));
+        *returnColumnSizes[i] = 3;
+    }
+    return output;
 }
 
 int main() {
-    int numsSize;
-    scanf("%d", &numsSize);
-    int *nums = (int *)calloc(numsSize, sizeof(int));
-    for (int i = 0; i < numsSize; i++) {
+    int* numsSize;
+    scanf("%d", numsSize);
+    int* nums = (int*)calloc(*numsSize, sizeof(int));
+    for (int i = 0; i < *numsSize; i++) {
         scanf("%d", &nums[i]);
     }
-    mergeSort(nums, 0, numsSize - 1);
+    int* returnSize = (int*)calloc(1, sizeof(int));
+    int** returnColumnSize;
+    int** output = threeSum(nums, *numsSize, returnSize, returnColumnSize);
+    for (int i = 0; i < *returnSize; i++) {
+        printf("[%d, %d, %d]\n", output[i][0], output[i][1], output[i][2]);
+    }
     return 0;
 }
