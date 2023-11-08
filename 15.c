@@ -69,7 +69,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
                 if ((nums[i1] == k1) || (nums[i1] + nums[i] + nums[i2] > 0)) {
                     i1--;
                 }
-                else if ((nums[i2] == k2) || (nums[i1] + nums[i] + nums[i2] < 0)) {
+                else if ((nums[i2] == k3) || (nums[i1] + nums[i] + nums[i2] < 0)) {
                     i2++;
                 }
                 else {
@@ -80,12 +80,14 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
                     output[size - 1][1] = nums[i];
                     output[size - 1][2] = nums[i2];
                     k1 = nums[i1];
-                    k2 = nums[i2];
+                    k3 = nums[i2];
                     i1--;
                     i2++;
                 }
             }
-            continue;
+            while (((i + 1) < numsSize) && (nums[i + 1] == nums[i])) {
+                i++;
+            }
         }
         else {
             k1 = 123456;
@@ -107,7 +109,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
                 if ((nums[i1] == k1) || (nums[i1] + nums[i] + nums[i2] > 0)) {
                     i1--;
                 }
-                else if ((nums[i2] == k2) || (nums[i1] + nums[i] + nums[i2] < 0)) {
+                else if ((nums[i2] == k3) || (nums[i1] + nums[i] + nums[i2] < 0)) {
                     i2++;
                 }
                 else {
@@ -118,7 +120,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
                     output[size - 1][1] = nums[i];
                     output[size - 1][2] = nums[i2];
                     k1 = nums[i1];
-                    k2 = nums[i2];
+                    k3 = nums[i2];
                     i1--;
                     i2++;
                 }
@@ -126,11 +128,11 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
         }
     }
     *returnSize = size;
-    returnColumnSizes = (int **)malloc(size * sizeof(int *));
+    (*returnColumnSizes) = (int *)malloc(size * sizeof(int));
     for (int i = 0; i < size; i++) {
-        returnColumnSizes[i] = (int *)malloc(sizeof(int));
-        returnColumnSizes[i][0] = 3;
+        (*returnColumnSizes)[i] = 3;
     }
+
     return output;
 }
 
