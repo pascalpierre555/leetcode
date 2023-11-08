@@ -1,48 +1,52 @@
+#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
 
-char **appendLetter(char **input, char *append, int returnSize) {
-    char **output = (char **)malloc(257 * sizeof(char *));
-    int i = 0;
-    int i2 = 0;
-    for (int k = 0; k < returnSize; k++) {
-        while (input[i][0] != '\0') {
-            int j = 0;
-            while (input[i][j] != '\0') {
-                output[i2][j] = input[i][j];
-                j++;
-            }
-            output[i][j] = append[k];
-            i++;
-            i2++;
-        }
-        i = 0;
+char** letterCombinations(char* digits, int* returnSize) {
+    int size = 1;
+    int l = 0;
+    (*returnSize) = 0;
+    char letters[9][4] = {
+        {0, 0, 0, 0},
+        {'a', 'b', 'c', 0},
+        {'d', 'e', 'f', 0},
+        {'g', 'h', 'i', 0},
+        {'j', 'k', 'l', 0},
+        {'m', 'n', 'o', 0},
+        {'p', 'q', 'r', 's'},
+        {'t', 'u', 'v', 0},
+        {'w', 'x', 'y', 'z'}
+    };
+    for (int i = 0; (digits[i] != 0) && (digits[i] != '\n'); i++) {
+        size *= 4;
+        l++;
     }
-    return output;
-}
-
-char **letterCombinations(char *digits, int *returnSize) {
-    char **output = (char **)malloc(257 * sizeof(char *));
-    char letters[8][5] = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
-    for (int i = 0; i < 5; i++) {
-        if (digits[i] != '\0') {
-            appendLetter(output, letters[digits[i] - 48], returnSize[digits[i] - 48]);
+    char** output = (char**)malloc(size * sizeof(char*));
+    int* i = (int*)calloc(l, sizeof(int));
+    while (l > 0) {
+        output[(*returnSize)] = (char*)malloc((l + 1) * sizeof(char));
+        for (int j = 0; j < l; j++) {
+            output[*returnSize][j] = letters[digits[j] - 49][i[j]];
+        }
+        output[*returnSize][l] = 0;
+        (*returnSize)++;
+        int tick = l - 1;
+        while ((tick >= 0) && ((i[tick] + 1 > 3) || (letters[digits[tick] - 49][i[tick] + 1] == 0))) {
+            i[tick] = 0;
+            tick--;
+        }
+        if (tick >= 0) {
+            i[tick]++;
+        }
+        else {
+            break;
         }
     }
     return output;
 }
 
 int main() {
-    int returnSize[10] = {0, 0, 3, 3, 3, 3, 3, 4, 3, 4};
-    char *digits = (char *)calloc(5, sizeof(char));
-    scanf("%d", &returnSize);
-    scanf("%s", digits);
-    int i = 0, j = 0;
-    char **output = letterCombinations(digits, returnSize);
-    while (output[i][0] != '\0') {
-        printf("%s", output[i]);
-        i++;
-        j = 0;
-    }
-    return 0;
+    int* returnSize = (int*)malloc(sizeof(int));
+    char input[100] = { 0 };
+    fgets(input, 100, stdin);
+    char** output = letterCombinations(input, returnSize);
 }
