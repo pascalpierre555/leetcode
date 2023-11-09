@@ -43,7 +43,8 @@
         "sstream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "string.h": "c"
     },
     "clang-format.style": "file",
     "clang-format.language.cpp.style": "file",
