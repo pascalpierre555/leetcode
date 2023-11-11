@@ -1,2 +1,8 @@
-12
-0 1 0 2 1 0 1 3 2 1 2 1
+abcd
+a*bcde
+a*d
+a*d*
+a*exe
+
+abcdabcde
+a*bcde
