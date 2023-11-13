@@ -1,8 +1,10 @@
-abcd
-a*bcde
-a*d
-a*d*
-a*exe
+ab?bc
 
-abcdabcde
-a*bcde
+aa
+a
+
+*ab
+**ab
+
+a
+a*a
