@@ -5,7 +5,7 @@
             "name": "C/C++ Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/test", // 修改為你的執行檔路徑
+            "program": "${workspaceFolder}/test.exe", // 修改為你的執行檔路徑
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

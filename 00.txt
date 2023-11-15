@@ -1,2 +1,1 @@
-abcabeabdabc
-abcabd
+11 20 1 10
