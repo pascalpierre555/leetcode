@@ -1,10 +1,2 @@
-ab?bc
-
-aa
-a
-
-*ab
-**ab
-
-a
-a*a
+abcabeabdabc
+abcabd
