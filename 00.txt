@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 abcabeabdabc
 abcabd
+=======
+11 20 1 10
+>>>>>>> 69e8fa970c2215ed2ee558b14810419ec767ff79
