@@ -27,27 +27,29 @@ char ***groupAnagrams(char **strs, int strsSize, int *returnSize, int **returnCo
     *returnColumnSizes = 0;
     int size = 0;
     for (int i = 0; i < strsSize; i++) {
-        for (int j = 0; j < size; j++) {
-            printf("%d %d\n", i, j);
+        int j = 0;
+        while (j < size) {
             if (isAnagrams(strs[i], output[j][0])) {
-                if (*returnColumnSizes[j] % 20 == 0) {
-                    output[size] = realloc(output[size], (((*returnColumnSizes[j]) / 20) + 1) * 20 * sizeof(char *));
+                if ((*returnColumnSizes)[j] % 20 == 0) {
+                    output[j] = realloc(output[j], (((*returnColumnSizes[j]) / 20) + 1) * 20 * sizeof(char *));
                 }
-                output[j][*returnColumnSizes[j]] = strs[i];
-                (*returnColumnSizes[j])++;
+                output[j][returnColumnSizes[0][j]] = strs[i];
+                returnColumnSizes[0][j]++;
                 break;
             }
+            j++;
         }
-        if (size % 512 == 0) {
-            output = realloc(output, ((size / 512) + 1) * 512 * sizeof(char **));
-            *returnColumnSizes = (int *)realloc(*returnColumnSizes, 512 * sizeof(int));
-            memset(*returnColumnSizes, 0, 512 * sizeof(int));
+        if (j == size) {
+            if (size % 512 == 0) {
+                output = realloc(output, ((size / 512) + 1) * 512 * sizeof(char **));
+                returnColumnSizes[0] = (int *)realloc(returnColumnSizes[0], ((size / 512) + 1) * 512 * sizeof(int));
+                printf("%s\n", strs[i]);
+            }
+            output[size] = (char **)malloc(20 * sizeof(char *));
+            (*returnColumnSizes)[size] = 1;
+            output[size][0] = strs[i];
+            size++;
         }
-        printf("mwoah");
-        output[size] = (char **)malloc(20 * sizeof(char *));
-        (*returnColumnSizes)[size] = 1;
-        output[size][0] = strs[i];
-        size++;
     }
     *returnSize = size;
     return output;
