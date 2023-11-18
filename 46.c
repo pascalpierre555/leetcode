@@ -21,6 +21,7 @@ int **findArr(int n) {
     else {
         int **input = findArr(n - 1);
         for (int i = 0; i < facn / n; i++) {
+
             for (int j = 0; j < n - 1; j++) {
                 for (int k = 0; k < n; k++) {
                     output[n * i + k][j] = (input[i][j] + k) % n;
@@ -33,6 +34,7 @@ int **findArr(int n) {
             }
         }
         for (int i = 0; i < facn / n; i++) {
+            printf("%d ", input[i][0]);
             free(input[i]);
         }
         free(input);
@@ -41,29 +43,16 @@ int **findArr(int n) {
 }
 
 int **permute(int *nums, int numsSize, int *returnSize, int **returnColumnSizes) {
-    int **arr = findArr(numsSize);
     *returnSize = factorial(numsSize);
     (*returnColumnSizes) = (int *)malloc((*returnSize) * sizeof(int));
     for (int i = 0; i < (*returnSize); i++) {
         (*returnColumnSizes)[i] = numsSize;
     }
+    int **arr = findArr(numsSize);
     for (int i = 0; i < *returnSize; i++) {
         for (int j = 0; j < numsSize; j++) {
             arr[i][j] = nums[arr[i][j]];
         }
     }
     return arr;
-}
-
-int main() {
-    int numsSize;
-    scanf("%d", &numsSize);
-    int *nums = (int *)malloc(numsSize * sizeof(int));
-    for (int i = 0; i < numsSize; i++) {
-        scanf("%d", &nums[i]);
-    }
-    int returnSize;
-    int **retrunColumnSize;
-    int **output = permute(nums, numsSize, &returnSize, retrunColumnSize);
-    return 0;
 }
