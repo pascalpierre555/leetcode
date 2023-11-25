@@ -2,55 +2,71 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <uthash.h>
 
-bool isAnagrams(char *a, char *b) {
-    if (strlen(a) != strlen(b)) {
-        return 0;
+typedef struct {
+    char *key;
+    char *strs[100];
+    size_t size;
+    UT_hash_handle hh;
+} StrsHash;
+
+char *StrToKey(char *str) {
+    int size = strlen(str);
+    char c[26] = {0};
+    char *key = malloc(size + 1);
+    char *k = key;
+    size_t i, j;
+
+    for (i = 0; i < size; i++) {
+        c[str[i] - 'a']++;
     }
-    int letters[26] = {0};
-    for (int i = 0; a[i] != 0; i++) {
-        letters[a[i] - 'a']++;
-    }
-    for (int i = 0; b[i] != 0; i++) {
-        letters[b[i] - 'a']--;
-    }
-    for (int i = 0; i < 26; i++) {
-        if (letters[i] != 0) {
-            return 0;
+
+    for (i = 0; i < 26; i++) {
+        for (j = 0; j < c[i]; j++) {
+            *k++ = 'a' + i;
         }
     }
-    return 1;
+    *k = '\0';
+    return key;
 }
 
 char ***groupAnagrams(char **strs, int strsSize, int *returnSize, int **returnColumnSizes) {
+    StrsHash *map = NULL;
+    StrsHash *entry;
+    char *key = NULL;
+
     char ***output = NULL;
-    *returnColumnSizes = 0;
-    int size = 0;
-    for (int i = 0; i < strsSize; i++) {
-        int j = 0;
-        while (j < size) {
-            if (isAnagrams(strs[i], output[j][0])) {
-                if ((*returnColumnSizes)[j] % 20 == 0) {
-                    output[j] = realloc(output[j], (((*returnColumnSizes[j]) / 20) + 1) * 20 * sizeof(char *));
-                }
-                output[j][returnColumnSizes[0][j]] = strs[i];
-                returnColumnSizes[0][j]++;
-                break;
-            }
-            j++;
+    int *colsSize = NULL;
+    size_t i;
+
+    // Create a hash map.
+    for (i = 0; i < strsSize; i++) {
+        entry = NULL;
+        key = StrToKey(strs[i]);
+        HASH_FIND_STR(map, key, entry);
+        if (!entry) {
+            entry = malloc(sizeof(StrsHash));
+            entry->key = key;
+            entry->size = 0;
+            HASH_ADD_KEYPTR(hh, map, key, strlen(key), entry);
         }
-        if (j == size) {
-            if (size % 512 == 0) {
-                output = realloc(output, ((size / 512) + 1) * 512 * sizeof(char **));
-                returnColumnSizes[0] = (int *)realloc(returnColumnSizes[0], ((size / 512) + 1) * 512 * sizeof(int));
-                printf("%s\n", strs[i]);
-            }
-            output[size] = (char **)malloc(20 * sizeof(char *));
-            (*returnColumnSizes)[size] = 1;
-            output[size][0] = strs[i];
-            size++;
+        else {
+            free(key);
         }
+        entry->strs[entry->size++] = strs[i];
     }
-    *returnSize = size;
+
+    // Prepare the answer from the hash map.
+    *returnSize = HASH_COUNT(map);
+    colsSize = (int *)malloc(*returnSize * sizeof(int));
+    output = (char ***)malloc(*returnSize * sizeof(char **));
+    *returnColumnSizes = colsSize;
+
+    for (entry = map, i = 0; entry != NULL; entry = entry->hh.next, i++) {
+        colsSize[i] = entry->size;
+        output[i] = entry->strs;
+    }
+
     return output;
 }
