@@ -11,16 +11,20 @@ int countNodes(struct TreeNode *root) {
     if (root == NULL) {
         return 0;
     }
-    int left = 0;
-    int right = 0;
-    if (root->left) {
-        left = countNodes(root->left);
+    struct TreeNode *leftNode = root;
+    struct TreeNode *rightNode = root;
+    int left = 1;
+    int right = 1;
+    while (leftNode->left) {
+        leftNode = leftNode->left;
+        left *= 2;
     }
-    if (root->right) {
-        right = countNodes(root->right);
+    while (rightNode->right) {
+        rightNode = rightNode->right;
+        right *= 2;
     }
-    return left + right + 1;
-}
-int main() {
-    return 0;
+    if (left == right) {
+        return left + right - 1;
+    }
+    return countNodes(root->left) + countNodes(root->right) + 1;
 }
